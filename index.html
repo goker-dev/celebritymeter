@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Celebrity Meter</title>
+        <meta name="description" content="Celebrity Meter is a simple meter to calculate online popularity for a Celebrity and compare each other." />
+        <meta name="author" content="goker" />
+        <link rel="shortcut icon" href="https://gokercebeci.com/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <link rel="stylesheet" href="css/default.css" />
+        <link rel="stylesheet" href="css/celebritymeter.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Celebrity Meter</h1>
+            <nav>
+                <a class="about">About</a>
+                <a class="howto">How to</a>
+                <a class="Usage">Usage</a>
+            </nav>
+        </header>
+        <div id="page-wrap">
+            <section id="simulator">
+                
+                <h1>Celebrity Meter</h1>
+                
+                <div id="vs">
+                    <div id="c1" class="celebrity">
+                        <div class="photo"></div>
+                        <div class="data"></div>
+                        <input class="name" type="text" name="c1" list="celebrities" maxlength="50" value="Katy Perry" />
+                        <span class="numbars" data-rank="0"><b>0</b></span>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div id="c2" class="celebrity">
+                        <div class="photo"></div>
+                        <div class="data"></div>
+                        <input class="name" type="text" name="c2" list="celebrities" maxlength="50" value="Lady Gaga" />
+                        <span class="numbars" data-rank="0"><b>0</b></span>
+                    </div>
+                </div>
+                
+                <datalist id="celebrities">
+                    <option value="Lady Gaga"/>
+                    <option value="Katy Perry"/>
+                    <option value="Oprah Winfrey"/>
+                    <option value="Justin Bieber"/>
+                    <option value="Madonna"/>
+                    <option value="Taylor Swift"/>
+                    <option value="Steven Spielberg"/>
+                    <option value="Beyonce Knowles"/>
+                    <option value="Rihanna"/>
+                    <option value="David Beckham"/>
+                    <option value="Tiger Woods"/>
+                    <option value="Jennifer Lopez"/>
+                    <option value="Hugh Jackman"/>
+                    <option value="Leonardo DiCaprio"/>
+                    <option value="Channing Tatum"/>
+                    <option value="Kobe Bryant"/>
+                    <option value="Tom Cruise"/>
+                    <option value="Mark Wahlberg"/>
+                    <option value="Adam Sandler"/>
+                    <option value="Cristiano Ronaldo"/>
+                    <option value="Will Smith"/>
+                    <option value="Lionel Messi"/>
+                    <option value="Angelina Jolie"/>
+                    <option value="David Guetta"/>
+                    <option value="Stephen King"/>
+                    <option value="Stephen King"/>
+                    <option value="Giselle Bundchen"/>
+                    <option value="Alec Baldwin"/>
+                    <option value="Emma Stone"/>
+                    <option value="Charlize Theron"/>
+                    <option value="Alessandra Ambrosio"/>
+                    <option value="Laetitia Casta"/>
+                    <option value="Miranda Kerr"/>
+                    <option value="Heidi Klum"/>
+                    <option value="Adriana Lima"/>
+                    <option value="Candice Swanepoel"/>
+                    <option value="Kanye West"/>
+                    <option value="Miley Cyrus"/>
+                </datalist>
+                
+            </section>
+        </div>
+        
+        <div id="modal">
+            <div id="modal-cell">
+                <div id="modal-content">
+                    <section id="about">
+                        <h1>About</h1>
+                        <h3>Celebrity Meter</h3>
+                        <p>
+                            <b>Celebrity Meter</b> is a simple meter to calculate online popularity for a celebrity and compare each other celebrity.
+                            <i>It collects data from Google, Wikipedia, IMDB and Twitter and calculates a <b>rank</b> value.</i>
+                            For more info please visit <a class="howto">How to</a> section. 
+                        </p>
+                        <p>
+                            I developed this as my homework for <b>Introduction to Natural Language Processing</b> course of M.Sc. Programme 
+                            in Computer Engineering in Yildiz Technical University.
+                            <a href="http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3">http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3</a>
+                        </p>
+                    </section>
+                    <section id="howto">
+                        <h1>How to</h1>
+                        <p>
+                        </p>
+                    </section>
+                    <section id="usage">
+                        <h1>Usage</h1>
+                        <p>
+                            You can write a celebrity name each input box and press <b>enter</b> key, 
+                            <i>Celebrity Meter</i> will collect data and calculate a rank value.
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <a href="https://gokercebeci.com/blog/gobot-mcl">Celebrity Meter : v1.0.0</a>
+            <p id="developer"> 
+                <a href="https://twitter.com/gokercebeci/status/">feedback</a><span>|</span>
+                developed by <a href="https://gokercebeci.com?feature=celebritymeter" title="goker"> goker</a>
+            </p>
+        </footer>
+        
+        <script src="js/jquery-2.0.3.min.js"></script>
+        <script src="js/default.js"></script>
+        <script src="js/celebritymeter.js"></script>
+        
+    </body>
+</html>
+
