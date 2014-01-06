@@ -111,6 +111,7 @@ class CelebrityMeter {
         gc_enable();
         $html = str_get_html($result);
         unset($result);
+        if(!$html) return;
         $this->Wikipedia->Name = trim($html->find('h1[id=firstHeading]', 0)->plaintext);
         $this->Wikipedia->Translations = (count($html->find('div[id=p-lang] li')) - 2);
         $this->Wikipedia->Photo = $html->find('table[class=vcard] img', 0)->src;
@@ -142,6 +143,7 @@ class CelebrityMeter {
         gc_enable();
         $html = str_get_html($result);
         unset($result);
+        if(!$html) return;
         $this->IMDB->Name = trim($html->find('h1[class=header]', 0)->plaintext);
         $this->IMDB->JobCategories = explode('|',str_replace(" ", '', $html->find('div[id=name-job-categories]', 0)->plaintext));
         $this->IMDB->Soundtrack = filter_var($html->find('div[id=filmo-head-soundtrack]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
@@ -175,6 +177,7 @@ class CelebrityMeter {
         gc_enable();
         $html = str_get_html($result);
         unset($result);
+        if(!$html) return;
         $this->Twitter->Account = trim($html->find('span[class=screen-name]', 0)->plaintext);
         $this->Twitter->isVerified = $html->find('span[class=verified-large-border]', 0)->plaintext ? 1 : 0;
         $this->Twitter->Tweets = filter_var($html->find('a[data-element-term=tweet_stats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;

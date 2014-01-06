@@ -2,12 +2,10 @@ function showModal() {
     $('body').addClass('dialogIsOpen');
     $('#modal section').hide();
     $('#modal #' + $(this).attr('class')).show();
-    $('<a>').addClass('x').html('X').off('click').on('click', closeModal).appendTo('section');
 }
 
 function closeModal() {
     $('body').removeClass('dialogIsOpen');
-    $('.x').remove();
 }
 
 $('nav a, .howto').on('click', showModal);
@@ -18,7 +16,9 @@ $(document).on('keydown', function(e) {
         closeModal();
     }
 });
-$('section').append('<span class="close">press <b>esc</b> key or click <b>x</b> to close the window.</span>');
+
+$('<a>').addClass('x').html('X').off('click').on('click', closeModal).appendTo('#modal section');
+$('#modal section').append('<span class="close">press <b>esc</b> key or click <b>x</b> to close the window.</span>');
 
 // =============================================================================
 // CLASS GENERATOR
