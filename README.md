@@ -11,6 +11,10 @@ M.Sc. Programme in Computer Engineering in Yildiz Technical University.
 
 [http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3](http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3)
                         
+Demo
+--------
+[https://gokercebeci.com/demos/celebritymeter/](https://gokercebeci.com/demos/celebritymeter/)
+
 Feedback
 --------
 You can reply [the post](https://twitter.com/gokercebeci/status/421386861076959232) to send feedback on Twitter.
