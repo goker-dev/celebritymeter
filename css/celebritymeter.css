@@ -59,6 +59,7 @@ section h1 {
     -webkit-transition: border-color 2s;
     -moz-transition: border-color 2s;
     transition: border-color 2s;
+    overflow:hidden;
 }
 .celebrity .numbars.green {
     border-color: #7Ab007;
@@ -75,7 +76,7 @@ section h1 {
     line-height: 32px;
     padding: 0 5px;
     color: #333;
-    text-shadow: 0 0 3px rgba(255,255,255,.3);
+    text-shadow: 1px 1px 0 rgba(255,255,255,.3), 1px -1px 0 rgba(255,255,255,.3), -1px 1px 0 rgba(255,255,255,.3), -1px -1px 0 rgba(255,255,255,.3);
     background-color: #bbb;
     -webkit-transition: background-color 2s, width 2s;
     -moz-transition: background-color 2s, width 2s;

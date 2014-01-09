@@ -1,26 +1,9 @@
-@font-face {
-    font-family:'Montserrat Alternates';
-    font-style:normal;
-    font-weight:400;
-    src:local(MontserratAlternates-Regular), url(fonts/MontserratAlternates-Regular.woff) format(woff);
-}
-@font-face {
-    font-family:'Raleway';
-    font-style:normal;
-    font-weight:400;
-    src:local(Raleway), url(fonts/Raleway.woff) format(woff);
-}
-@font-face {
-    font-family:'Courgette';
-    font-style:normal;
-    font-weight:400;
-    src:local(Courgette-Regular), url(fonts/Courgette-Regular.woff) format(woff);
-}
-
 * {
     -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
     box-sizing:border-box;
     -webkit-touch-callout:none;
+    -moz-touch-callout:none;
     touch-callout:none;
     outline:none;
     border:0;
@@ -42,6 +25,8 @@ body {
     overflow:hidden;
     -webkit-transform:translateZ(0);
 }
+
+.clearfix { clear:both; }
 
 header {
     position:fixed;
@@ -171,6 +156,7 @@ footer a {
 
 #page-wrap {
     padding:40px 0;
+    font:14px/30px 'Raleway', sans-serif;
 }
 
 section {

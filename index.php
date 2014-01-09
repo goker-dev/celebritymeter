@@ -12,7 +12,6 @@ class CelebrityMeter {
     protected $useragent = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.4) Gecko/20091030 Gentoo Firefox/3.5.4";
     protected $googleURL = "http://www.google.com/search?hl=en&tbo=d&site=&source=hp&q=";
     protected $googleNewsURL = "http://www.google.com/search?hl=en&tbo=d&site=&source=hp&tbm=nws&q=";
-    protected $googleTrendsURL = "http://www.google.com/trends/fetchComponent?cid=TIMESERIES_GRAPH_0&export=3&q=";
     protected $cacheDirectory = "./cache/";
     
     private $query;
@@ -20,7 +19,6 @@ class CelebrityMeter {
     public $Rank;
     public $Google;
     public $GoogleNews;
-    //public $GoogleTrends;
     public $Wikipedia;
     public $IMDb;
     public $Twitter;
@@ -32,12 +30,13 @@ class CelebrityMeter {
         
         $this->googleSearch();
         $this->collectGoogleNews();
-        //$this->collectGoogleTrends();
         $this->collectWikipedia($this->Google->WikipediaLink);
         $this->collectIMDb($this->Google->IMDbLink);
         $this->collectTwitter($this->Google->TwitterLink);
         
         $this->calculate();
+        
+        $this->returnAsJSON();
     }
     
     private function calculate(){
@@ -46,9 +45,7 @@ class CelebrityMeter {
             $this->Google->ResultStats * 1
             + $this->GoogleNews->ResultStats * 10
             + $this->Wikipedia->Translations * 100
-            //+ ($this->Wikipedia->Photo ? 1000 : 0)
             + count($this->IMDb->JobCategories) * 1000
-            + ($this->IMDb->Name ? 1000 : 0)
             + $this->IMDb->Soundtrack * 100
             + $this->IMDb->Actress * 1000
             + $this->IMDb->Actor * 1000
@@ -63,14 +60,6 @@ class CelebrityMeter {
             + $this->Twitter->Following * 0
             + $this->Twitter->Followers * 1
             ;
-        /*
-        $this->TopRank = $this->getCache('toprank', false);
-        if($this->TopRank <= $this->Rank) {
-            $this->TopRank = $this->Rank;
-            $this->setCache('toprank', $this->TopRank, false);
-        }
-        */
-        
     }
     
     private function googleSearch($param = ''){
@@ -91,28 +80,24 @@ class CelebrityMeter {
                 'WikipediaLink' => '',
                 'IMDbLink' => '',
                 'TwitterLink' => '',
-                //'FirstPage' => '',
             );
         
-        $i = 0;
         if(!$this->Google->ResultStats)
             $this->Google->ResultStats = (filter_var($html->find('div[id=resultStats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1);
-
+       
         foreach ($html->find('li[class=g]') as $element) {
-
-            //if(!$param)
-            //    $this->Google->FirstPage[] = array('title' => $element->find('h3')[0]->plaintext,
-            //                                   'link' => $element->find('cite')[0]->plaintext);
-            
+       
             if(!$this->Google->WikipediaLink && preg_match('/\.wikipedia\.org/', $element->find('cite')[0]->plaintext))
                 $this->Google->WikipediaLink = 'http://' . $element->find('cite')[0]->plaintext;
             
-            if(!$this->Google->IMDbLink && preg_match('/\.IMDb\.com/', $element->find('cite')[0]->plaintext))
+            if(!$this->Google->IMDbLink && preg_match('/\.imdb\.com/', $element->find('cite')[0]->plaintext))
                 $this->Google->IMDbLink = 'http://' . $element->find('cite')[0]->plaintext;
             
             if(!$this->Google->TwitterLink && preg_match('/\/twitter\.com/', $element->find('cite')[0]->plaintext))
                 $this->Google->TwitterLink = $element->find('cite')[0]->plaintext;
+        
         }
+        
         if(!$this->Google->WikipediaLink && !$param)
             $this->googleSearch('wikipedia');
         
@@ -144,29 +129,6 @@ class CelebrityMeter {
         $this->GoogleNews->ResultStats = (filter_var($html->find('div[id=resultStats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1);
         gc_disable();
     }
-    
-    
-    private function collectGoogleTrends(){
-        
-        $this->GoogleTrends = (Object) array(
-            'Trend' => 0
-        );
-            
-        $result = false;//$this->getCache('googletrends');
-        if(!$result) {
-            $result = $this->collect($this->googleTrendsURL . $this->query);
-            $this->setCache('googletrends', $result);
-            echo str_replace(array('google.visualization.Query.setResponse(', '}});'), array('','}};'),$result);
-        }
-        
-        gc_enable();
-        $json = @json_decode($result);
-        unset($result);
-        if(!$json) return;
-        $this->GoogleTrends->Trend = $json;
-        gc_disable();
-    }
-    
     
     private function collectWikipedia($url){
         
@@ -281,7 +243,7 @@ class CelebrityMeter {
         
         $ch = curl_init("");
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent); // set user agent
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt ($ch, CURLOPT_AUTOREFERER, true);
@@ -293,19 +255,10 @@ class CelebrityMeter {
         
     }
     
-    function returnAsJSON(){
+    public function returnAsJSON(){
         echo json_encode($this);
-    }
-    
-    function returnAsReadble(){
-        echo '<style>body {font: 12px/normal sans-serif; color: #333;}</style>';
-        echo '<meta charset="utf-8">';
-        echo '<pre>';
-        
-        echo '</pre>';
     }
     
 }
 
-$cm = new CelebrityMeter($_GET['q']);
-$cm->returnAsJSON();
+new CelebrityMeter($_GET['q']);
