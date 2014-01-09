@@ -21,7 +21,7 @@ You can reply [the post](https://twitter.com/gokercebeci/status/4213868610769592
 
 License
 -------
-It is under [GPLv2 License](https://github.com/gokercebeci/celebritymeter/blob/master/LICENCE "GPLv2 License")
+It is under [GPLv2 License](https://github.com/gokercebeci/celebritymeter/blob/master/LICENSE "GPLv2 License")
 
 Developer
 ---------
