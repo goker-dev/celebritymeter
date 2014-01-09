@@ -1,7 +1,7 @@
 <?php
 
 /**
- *
+ * Celebrity Meter
  * @author goker
  */
 
@@ -9,16 +9,20 @@ include("lib/simple_html_dom.php");
 
 class CelebrityMeter {
     
-    protected $useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
+    protected $useragent = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.4) Gecko/20091030 Gentoo Firefox/3.5.4";
     protected $googleURL = "http://www.google.com/search?hl=en&tbo=d&site=&source=hp&q=";
+    protected $googleNewsURL = "http://www.google.com/search?hl=en&tbo=d&site=&source=hp&tbm=nws&q=";
+    protected $googleTrendsURL = "http://www.google.com/trends/fetchComponent?cid=TIMESERIES_GRAPH_0&export=3&q=";
     protected $cacheDirectory = "./cache/";
     
     private $query;
     private $hash;
     public $Rank;
     public $Google;
+    public $GoogleNews;
+    //public $GoogleTrends;
     public $Wikipedia;
-    public $IMDB;
+    public $IMDb;
     public $Twitter;
     
     function CelebrityMeter($query = 'lady gaga'){
@@ -27,8 +31,10 @@ class CelebrityMeter {
         $this->hash = md5($this->query);
         
         $this->googleSearch();
+        $this->collectGoogleNews();
+        //$this->collectGoogleTrends();
         $this->collectWikipedia($this->Google->WikipediaLink);
-        $this->collectIMDB($this->Google->IMDBLink);
+        $this->collectIMDb($this->Google->IMDbLink);
         $this->collectTwitter($this->Google->TwitterLink);
         
         $this->calculate();
@@ -37,61 +43,130 @@ class CelebrityMeter {
     private function calculate(){
         
         $this->Rank = 
-            $this->Google->Results * .0001
+            $this->Google->ResultStats * 1
+            + $this->GoogleNews->ResultStats * 10
             + $this->Wikipedia->Translations * 100
-            + ($this->Wikipedia->Photo ? 100 : 0)
-            + count($this->IMDB->JobCategories) * 10
-            + $this->IMDB->Soundtrack  * 2
-            + $this->IMDB->Actress * 10
-            + $this->IMDB->Actor * 10
-            + $this->IMDB->Producer * 1
-            + $this->IMDB->Director * 1
-            + $this->IMDB->Writer * 1
-            + $this->IMDB->Composer * 1
+            //+ ($this->Wikipedia->Photo ? 1000 : 0)
+            + count($this->IMDb->JobCategories) * 1000
+            + ($this->IMDb->Name ? 1000 : 0)
+            + $this->IMDb->Soundtrack * 100
+            + $this->IMDb->Actress * 1000
+            + $this->IMDb->Actor * 1000
+            + $this->IMDb->Producer * 10
+            + $this->IMDb->Director * 10
+            + $this->IMDb->Writer * 10
+            + $this->IMDb->Composer * 10
+            + $this->IMDb->Thanks * 10
+            + $this->IMDb->Self * 10
             + $this->Twitter->isVerified * 1000
-            + $this->Twitter->Tweets * -.001
-            + $this->Twitter->Following * -.1
-            + $this->Twitter->Followers * .001
+            + $this->Twitter->Tweets * 0
+            + $this->Twitter->Following * 0
+            + $this->Twitter->Followers * 1
             ;
+        /*
+        $this->TopRank = $this->getCache('toprank', false);
+        if($this->TopRank <= $this->Rank) {
+            $this->TopRank = $this->Rank;
+            $this->setCache('toprank', $this->TopRank, false);
+        }
+        */
         
     }
     
-    private function googleSearch(){
+    private function googleSearch($param = ''){
         
-        $result = $this->getCache('google');
+        $result = $this->getCache('google' . $param);
         if(!$result) {
-            $result = $this->collect($this->googleURL . $this->query);
-            $this->setCache('google', $result);
+            $result = $this->collect($this->googleURL . $this->query 
+                                     .($param ? '%20' . $param : ''));
+            $this->setCache('google' . $param, $result);
         }
         
         gc_enable();
         $html = str_get_html($result);
         unset($result);
-        $this->Google = (Object) array(
-            'Results' => (filter_var($html->find('div[id=resultStats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1),
-            'WikipediaLink' => '',
-            'IMDBLink' => '',
-            'TwitterLink' => '',
-            'FirstPage' => '',
-        );
+        if(!$param)
+            $this->Google = (Object) array(
+                'ResultStats' => 0,
+                'WikipediaLink' => '',
+                'IMDbLink' => '',
+                'TwitterLink' => '',
+                //'FirstPage' => '',
+            );
         
         $i = 0;
+        if(!$this->Google->ResultStats)
+            $this->Google->ResultStats = (filter_var($html->find('div[id=resultStats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1);
+
         foreach ($html->find('li[class=g]') as $element) {
-            
-            $this->Google->FirstPage[] = array('title' => $element->find('h3')[0]->plaintext,
-                                               'link' => $element->find('cite')[0]->plaintext);
+
+            //if(!$param)
+            //    $this->Google->FirstPage[] = array('title' => $element->find('h3')[0]->plaintext,
+            //                                   'link' => $element->find('cite')[0]->plaintext);
             
             if(!$this->Google->WikipediaLink && preg_match('/\.wikipedia\.org/', $element->find('cite')[0]->plaintext))
                 $this->Google->WikipediaLink = 'http://' . $element->find('cite')[0]->plaintext;
             
-            if(!$this->Google->IMDBLink && preg_match('/\.imdb\.com/', $element->find('cite')[0]->plaintext))
-                $this->Google->IMDBLink = 'http://' . $element->find('cite')[0]->plaintext;
+            if(!$this->Google->IMDbLink && preg_match('/\.IMDb\.com/', $element->find('cite')[0]->plaintext))
+                $this->Google->IMDbLink = 'http://' . $element->find('cite')[0]->plaintext;
             
             if(!$this->Google->TwitterLink && preg_match('/\/twitter\.com/', $element->find('cite')[0]->plaintext))
                 $this->Google->TwitterLink = $element->find('cite')[0]->plaintext;
         }
+        if(!$this->Google->WikipediaLink && !$param)
+            $this->googleSearch('wikipedia');
+        
+        if(!$this->Google->IMDbLink && !$param)
+            $this->googleSearch('IMDb');
+        
+        if(!$this->Google->TwitterLink && !$param)
+            $this->googleSearch('twitter');
+        
         gc_disable();
     }
+    
+    private function collectGoogleNews(){
+        
+        $this->GoogleNews = (Object) array(
+            'ResultStats' => 0
+        );
+            
+        $result = $this->getCache('googlenews');
+        if(!$result) {
+            $result = $this->collect($this->googleNewsURL . $this->query);
+            $this->setCache('googlenews', $result);
+        }
+        
+        gc_enable();
+        $html = str_get_html($result);
+        unset($result);
+        if(!$html) return;
+        $this->GoogleNews->ResultStats = (filter_var($html->find('div[id=resultStats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1);
+        gc_disable();
+    }
+    
+    
+    private function collectGoogleTrends(){
+        
+        $this->GoogleTrends = (Object) array(
+            'Trend' => 0
+        );
+            
+        $result = false;//$this->getCache('googletrends');
+        if(!$result) {
+            $result = $this->collect($this->googleTrendsURL . $this->query);
+            $this->setCache('googletrends', $result);
+            echo str_replace(array('google.visualization.Query.setResponse(', '}});'), array('','}};'),$result);
+        }
+        
+        gc_enable();
+        $json = @json_decode($result);
+        unset($result);
+        if(!$json) return;
+        $this->GoogleTrends->Trend = $json;
+        gc_disable();
+    }
+    
     
     private function collectWikipedia($url){
         
@@ -118,9 +193,9 @@ class CelebrityMeter {
         gc_disable();
     }
     
-    private function collectIMDB($url){
+    private function collectIMDb($url){
         
-        $this->IMDB = (Object) array(
+        $this->IMDb = (Object) array(
             'Name' => '',
             'JobCategories' => array(),
             'Soundtrack' => 0,
@@ -131,36 +206,38 @@ class CelebrityMeter {
             'Writer' => 0,
             'Composer' => 0,
             'Thanks' => 0,
+            'Self' => 0,
         );
         if(!$url) return;
             
-        $result = $this->getCache('imdb');
+        $result = $this->getCache('IMDb');
         if(!$result) {
             $result = $this->collect($url);
-            $this->setCache('imdb', $result);
+            $this->setCache('IMDb', $result);
         }
         
         gc_enable();
         $html = str_get_html($result);
         unset($result);
         if(!$html) return;
-        $this->IMDB->Name = trim($html->find('h1[class=header]', 0)->plaintext);
-        $this->IMDB->JobCategories = explode('|',str_replace(" ", '', $html->find('div[id=name-job-categories]', 0)->plaintext));
-        $this->IMDB->Soundtrack = filter_var($html->find('div[id=filmo-head-soundtrack]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Actress = filter_var($html->find('div[id=filmo-head-actress]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Actor = filter_var($html->find('div[id=filmo-head-actor]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Producer = filter_var($html->find('div[id=filmo-head-producer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Director = filter_var($html->find('div[id=filmo-head-director]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Writer = filter_var($html->find('div[id=filmo-head-writer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Composer = filter_var($html->find('div[id=filmo-head-composer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
-        $this->IMDB->Thanks = filter_var($html->find('div[id=filmo-head-thanks]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Name = trim($html->find('h1[class=header]', 0)->plaintext);
+        $this->IMDb->JobCategories = explode('|',str_replace(" ", '', $html->find('div[id=name-job-categories]', 0)->plaintext));
+        $this->IMDb->Soundtrack = filter_var($html->find('div[id=filmo-head-soundtrack]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Actress = filter_var($html->find('div[id=filmo-head-actress]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Actor = filter_var($html->find('div[id=filmo-head-actor]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Producer = filter_var($html->find('div[id=filmo-head-producer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Director = filter_var($html->find('div[id=filmo-head-director]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Writer = filter_var($html->find('div[id=filmo-head-writer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Composer = filter_var($html->find('div[id=filmo-head-composer]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Thanks = filter_var($html->find('div[id=filmo-head-thanks]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
+        $this->IMDb->Self = filter_var($html->find('div[id=filmo-head-self]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
         gc_disable();
     }
     
     private function collectTwitter($url){
         
         $this->Twitter = (Object) array(
-            'Account' => '',
+            //'Account' => '',
             'isVerified' => 0,
             'Tweets' => 0,
             'Following' => 0,
@@ -178,7 +255,7 @@ class CelebrityMeter {
         $html = str_get_html($result);
         unset($result);
         if(!$html) return;
-        $this->Twitter->Account = trim($html->find('span[class=screen-name]', 0)->plaintext);
+        //$this->Twitter->Account = trim($html->find('span[class=screen-name]', 0)->plaintext);
         $this->Twitter->isVerified = $html->find('span[class=verified-large-border]', 0)->plaintext ? 1 : 0;
         $this->Twitter->Tweets = filter_var($html->find('a[data-element-term=tweet_stats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
         $this->Twitter->Following = filter_var($html->find('a[data-element-term=following_stats]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
@@ -186,16 +263,16 @@ class CelebrityMeter {
         gc_disable();
     }
     
-    private function getCache($prefix){
+    private function getCache($prefix, $byHash = true){
         
-        $cacheFile = $this->cacheDirectory . $prefix .'.'.$this->hash.'.cache';
+        $cacheFile = $this->cacheDirectory . $prefix . ($byHash ? '.' . $this->hash : '') . '.cache';
         return @file_get_contents($cacheFile);
         
     }
     
-    private function setCache($prefix, $content){
+    private function setCache($prefix, $content, $byHash = true){
         
-        $cacheFile = $this->cacheDirectory . $prefix .'.'.$this->hash.'.cache';
+        $cacheFile = $this->cacheDirectory . $prefix . ($byHash ? '.' . $this->hash : '') . '.cache';
         return @file_put_contents($cacheFile, $content);
         
     }
@@ -206,14 +283,15 @@ class CelebrityMeter {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent); // set user agent
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt ($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
         
     }
-    
-    
     
     function returnAsJSON(){
         echo json_encode($this);
@@ -229,17 +307,5 @@ class CelebrityMeter {
     
 }
 
-
 $cm = new CelebrityMeter($_GET['q']);
 $cm->returnAsJSON();
-
-
-/*    
-include 'google.php';
-gc_enable();
-include 'wikipedia.php';
-gc_disable();
-include 'imdb.php';
-include 'twitter.php';
-*/
-
