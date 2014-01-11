@@ -23,10 +23,10 @@ section h1 {
     text-align:center;
     letter-spacing: -30px;
 }
-#c1 {
+.celebrity.c1 {
     float: left;
 }
-#c2 {
+.celebrity.c2 {
     float: right;
 }
 
@@ -40,16 +40,17 @@ section h1 {
     background-repeat:no-repeat;
 }
 
-.celebrity .name {
+.name {
     display: block;
     padding: 5px 0;
+    width: 100%;
     font: 20px/20px 'Montserrat Alternates';
     text-shadow: 0 0 2px rgba(255,255,255,.6);
     text-align:center;
 }
 
 
-.celebrity .numbars {
+.numbars {
     position:relative;
     display: block;
     width: 100%;
@@ -61,13 +62,13 @@ section h1 {
     transition: border-color 2s;
     overflow:hidden;
 }
-.celebrity .numbars.green {
+.numbars.green {
     border-color: #7Ab007;
 }
-.celebrity .numbars.red {
+.numbars.red {
     border-color: #b7130a;
 }
-.celebrity .numbars b {
+.numbars b {
     position: absolute;
     left: 0;
     top: 0;
@@ -82,9 +83,25 @@ section h1 {
     -moz-transition: background-color 2s, width 2s;
     transition: background-color 2s, width 2s;
 }
-.celebrity .numbars.green b {
+.numbars.green b {
     background-color: #8AC007;
 }
-.celebrity .numbars.red b {
+.numbars.red b {
     background-color: #c7231a;
+}
+
+table { width: 100%; }
+td .name, td .numbars {
+    width: 200px;
+}
+td.c1, td.c2 {
+    text-align: right;
+}
+td input[type=range] {
+    float:left;
+    padding: 2px;
+}
+td b {
+    float:right;
+    padding: 2px;
 }

@@ -45,7 +45,7 @@ class CelebrityMeter {
             $this->Google->ResultStats * 1
             + $this->GoogleNews->ResultStats * 10
             + $this->Wikipedia->Translations * 100
-            + count($this->IMDb->JobCategories) * 1000
+            + $this->IMDb->JobCategories * 1000
             + $this->IMDb->Soundtrack * 100
             + $this->IMDb->Actress * 1000
             + $this->IMDb->Actor * 1000
@@ -184,6 +184,7 @@ class CelebrityMeter {
         if(!$html) return;
         $this->IMDb->Name = trim($html->find('h1[class=header]', 0)->plaintext);
         $this->IMDb->JobCategories = explode('|',str_replace(" ", '', $html->find('div[id=name-job-categories]', 0)->plaintext));
+        $this->IMDb->JobCategories = count($this->IMDb->JobCategories);
         $this->IMDb->Soundtrack = filter_var($html->find('div[id=filmo-head-soundtrack]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
         $this->IMDb->Actress = filter_var($html->find('div[id=filmo-head-actress]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;
         $this->IMDb->Actor = filter_var($html->find('div[id=filmo-head-actor]', 0)->plaintext, FILTER_SANITIZE_NUMBER_INT) *1;

@@ -17,6 +17,7 @@
             <h1>Celebrity Meter</h1>
             <nav>
                 <a class="about">About</a>
+                <a class="tune">Tune</a>
             </nav>
         </header>
         <div id="page-wrap">
@@ -25,14 +26,14 @@
                 <h1>Celebrity Meter</h1>
                 
                 <div id="vs">
-                    <div id="c1" class="celebrity">
+                    <div class="celebrity c1">
                         <div class="photo"></div>
                         <div class="data"></div>
                         <input class="name" type="text" name="c1" list="celebrities" maxlength="50" value="Katy Perry" />
                         <span class="numbars"><b>0</b></span>
                     </div>
                     <div class="vs">VS</div>
-                    <div id="c2" class="celebrity">
+                    <div class="celebrity c2">
                         <div class="photo"></div>
                         <div class="data"></div>
                         <input class="name" type="text" name="c2" list="celebrities" maxlength="50" value="Lady Gaga" />
@@ -113,6 +114,138 @@
                             in Computer Engineering in Yildiz Technical University.
                             <a href="http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3">http://www.bologna.yildiz.edu.tr/index.php?r=course/view&id=5972&aid=3</a>
                         </p>
+                    </section>
+                    <section id="tune">
+                        <h1>Tune</h1>
+                        <p>
+                            You can change parameters weight easly to calculate new rank value.
+                        </p>
+                        <div>
+                            <div id="params">
+                                <table>
+                                    <tr>
+                                        <td>Parameter</td>
+                                        <td>Weight</td>
+                                        <td>
+                                            <div class="c1">
+                                                <input class="name" type="text" name="c1" list="celebrities" maxlength="50" value="Katy Perry" />
+                                                <span class="numbars"><b>0</b></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="c2">
+                                                <input class="name" type="text" name="c2" list="celebrities" maxlength="50" value="Lady Gaga" />
+                                                <span class="numbars"><b>0</b></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="Google ResultStats">
+                                        <td>Google -> ResultStats</td>
+                                        <td><input name="param[Google][ResultStats]" type="range" min="0" max="1000" step="1" value="1" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="GoogleNews ResultStats">
+                                        <td>GoogleNews -> ResultStats</td>
+                                        <td><input name="param[GoogleNews][ResultStats]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="Wikipedia Translations">
+                                        <td>Wikipedia -> Translations</td>
+                                        <td><input name="param[Wikipedia][Translations]" type="range" min="0" max="1000" step="1" value="100" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb JobCategories">
+                                        <td>IMDb -> JobCategories</td>
+                                        <td><input name="param[IMDb][JobCategories]" type="range" min="0" max="1000" step="1" value="1000" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Soundtrack">
+                                        <td>IMDb -> Soundtrack</td>
+                                        <td><input name="param[IMDb][Soundtrack]" type="range" min="0" max="1000" step="1" value="100" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Actress">
+                                        <td>IMDb -> Actress</td>
+                                        <td><input name="param[IMDb][Actress]" type="range" min="0" max="1000" step="1" value="1000" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Actor">
+                                        <td>IMDb -> Actor</td>
+                                        <td><input name="param[IMDb][Actor]" type="range" min="0" max="1000" step="1" value="1000" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Producer">
+                                        <td>IMDb -> Producer</td>
+                                        <td><input name="param[IMDb][Producer]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Director">
+                                        <td>IMDb -> Director</td>
+                                        <td><input name="param[IMDb][Director]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Writer">
+                                        <td>IMDb -> Writer</td>
+                                        <td><input name="param[IMDb][Writer]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Composer">
+                                        <td>IMDb -> Composer</td>
+                                        <td><input name="param[IMDb][Composer]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Thanks">
+                                        <td>IMDb -> Thanks</td>
+                                        <td><input name="param[IMDb][Thanks]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="IMDb Self">
+                                        <td>IMDb -> Self</td>
+                                        <td><input name="param[IMDb][Self]" type="range" min="0" max="1000" step="1" value="10" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="Twitter isVerified">
+                                        <td>Twitter -> isVerified</td>
+                                        <td><input name="param[Twitter][isVerified]" type="range" min="0" max="1000" step="1" value="1000" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="Twitter Tweets">
+                                        <td>Twitter -> Tweets</td>
+                                        <td><input name="param[Twitter][Tweets]" type="range" min="0" max="1000" step="1" value="0" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="Twitter Following">
+                                        <td>Twitter -> Following</td>
+                                        <td><input name="param[Twitter][Following]" type="range" min="0" max="1000" step="1" value="0" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                    <tr class="Twitter Followers">
+                                        <td>Twitter -> Followers</td>
+                                        <td><input name="param[Twitter][Followers]" type="range" min="0" max="1000" step="1" value="1" /><b></b></td>
+                                        <td class="c1"></td>
+                                        <td class="c2"></td>
+                                    </tr>
+                                </table>
+                                
+                                
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
