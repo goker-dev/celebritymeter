@@ -28,11 +28,11 @@ function get(name, val){
         var j = 0;
         for(var i in data){
             for(var k in data[i]){
-                
-                $('tr.'+i+'.'+k+' input').val(weights[j++]);
-                $('tr.'+i+'.'+k+' b').html($('tr.'+i+'.'+k+' input').val());
-                $('tr.'+i+'.'+k+' .'+name).html(data[i][k]);
-                
+                if($('tr.'+i+'.'+k).length){
+                    $('tr.'+i+'.'+k+' input').val(weights[j++]);
+                    $('tr.'+i+'.'+k+' b').html($('tr.'+i+'.'+k+' input').val());
+                    $('tr.'+i+'.'+k+' .'+name).html(data[i][k]);
+                }
             }
         }
         
@@ -45,7 +45,6 @@ $('input[type=range]').on('change', function(e){
     $(this).next('b').html($(this).val());
 });
 $('input[type=range]').on('mouseup', function(e){
-    //console.log('mouseup', $(this));
     calculate();
 });
 
@@ -56,15 +55,14 @@ function calculate(){
     for(var i in data){
         for(var k in data[i]){
             if($('tr.'+i+'.'+k).length){
-                weights[j++] = $('tr.'+i+'.'+k+' input').val();
-                rank += $('tr.'+i+'.'+k+' .c1').html() * $('tr.'+i+'.'+k+' input').val();
-                rankOther +=$('tr.'+i+'.'+k+' .c2').html() * $('tr.'+i+'.'+k+' input').val();
+                weights[j] = $('tr.'+i+'.'+k+' input').val() *1;
+                rank += $('tr.'+i+'.'+k+' .c1').html() * weights[j];
+                rankOther +=$('tr.'+i+'.'+k+' .c2').html() * weights[j++];
             }
             
         }
     }
     localStorage.setItem('weights', JSON.stringify(weights));
-    //console.log(rank, rankOther);
     showResults(rank, rankOther);
 }
 
