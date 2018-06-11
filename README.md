@@ -13,7 +13,7 @@ M.Sc. Programme in Computer Engineering in Yildiz Technical University.
                         
 Demo
 --------
-[http://gokercebeci.com/demos/celebritymeter/](http://gokercebeci.com/demos/celebritymeter/)
+[http://goker.me/demos/celebritymeter/](http://goker.me/demos/celebritymeter/)
 
 Feedback
 --------
